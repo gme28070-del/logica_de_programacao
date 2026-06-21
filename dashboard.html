@@ -3,135 +3,1414 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Lógica de Programação</title>
+    <title>Dashboard Interativa - Lógica de Programação</title>
     <style>
-        /* Reset e Box-Sizing */
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Courier New', Courier, monospace; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Estilização do Body */
-        body { 
-            background-color: #0b0c10; 
-            color: #66fcf1; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            overflow: hidden; 
+        :root {
+            --bg-dark: #0b0c10;
+            --bg-panel: #1f2833;
+            --bg-card: #2c3444;
+            --accent-cyan: #66fcf1;
+            --accent-green: #95ed19;
+            --accent-orange: #ff6b35;
+            --text-primary: #c5c6c7;
+            --text-secondary: #8b949e;
+            --border: #45a29e;
         }
 
-        /* Estrutura Geral */
-       .dashboard-container {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-card) 100%);
+            padding: 20px 40px;
+            border-bottom: 2px solid var(--accent-cyan);
             display: flex;
-            width: 90%;
-            max-width: 1200px;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        /* Conteúdo Principal */
-       .content {
-            flex: 3;
+        .header h1 {
+            color: var(--accent-cyan);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header h1::before {
+            content: '⚡';
+            font-size: 2rem;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 8px;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Layout Principal */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        /* Sidebar de Navegação */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
             padding: 20px;
-            background-color: #1f2833;
-            border-right: 2px solid #95ed19;
         }
 
-        /* Espaço Interativo */
-       .interactive-space {
-            flex: 1;
-            padding: 20px;
-            background-color: #2c3444;
-        }
-
-        /* Cabeçalho */
-       .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* Tópicos de Lógica de Programação */
-       .topic {
-            margin-bottom: 20px;
-        }
-
-       .topic h2 {
-            color: #95ed19;
-            font-size: 24px;
+        .nav-item {
+            padding: 15px 20px;
             margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            position: relative;
         }
 
-       .topic p {
+        .nav-item:hover {
+            background: var(--bg-card);
+            border-left-color: var(--accent-cyan);
+        }
+
+        .nav-item.active {
+            background: var(--bg-card);
+            border-left-color: var(--accent-green);
+        }
+
+        .nav-item h3 {
+            color: var(--accent-cyan);
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+
+        .nav-item p {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .nav-item .status {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+        }
+
+        .nav-item.completed .status {
+            background: var(--accent-green);
+        }
+
+        /* Área de Conteúdo */
+        .content-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .theory-panel {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: var(--bg-dark);
+        }
+
+        .practice-panel {
+            width: 45%;
+            background: var(--bg-panel);
+            border-left: 2px solid var(--accent-green);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Cards de Teoria */
+        .theory-card {
+            background: var(--bg-panel);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .theory-card h2 {
+            color: var(--accent-green);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theory-card h3 {
+            color: var(--accent-cyan);
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+
+        .theory-card p {
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .theory-card ul {
+            margin-left: 25px;
+            color: var(--text-primary);
+        }
+
+        .theory-card li {
+            margin-bottom: 8px;
             line-height: 1.6;
         }
 
-        /* Botão Voltar */
-       .back-button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #95ed19;
-            color: #0b0c10;
-            text-align: center;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-top: 20px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+        .code-example {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
         }
 
-       .back-button:hover {
-            background-color: #78c918;
+        .code-example .comment {
+            color: #8b949e;
+        }
+
+        .code-example .keyword {
+            color: #ff7b72;
+        }
+
+        .code-example .string {
+            color: #a5d6ff;
+        }
+
+        .code-example .number {
+            color: #79c0ff;
+        }
+
+        .code-example .function {
+            color: #d2a8ff;
+        }
+
+        /* Painel de Prática */
+        .practice-header {
+            padding: 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .practice-header h2 {
+            color: var(--accent-green);
+            font-size: 1.3rem;
+        }
+
+        .practice-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        /* Editor de Código */
+        .code-editor {
+            background: #0d1117;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+            margin-bottom: 20px;
+        }
+
+        .editor-header {
+            background: #161b22;
+            padding: 10px 15px;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .editor-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .editor-dot.red { background: #ff5f56; }
+        .editor-dot.yellow { background: #ffbd2e; }
+        .editor-dot.green { background: #27c93f; }
+
+        .editor-title {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-left: 10px;
+        }
+
+        textarea.code-input {
+            width: 100%;
+            min-height: 200px;
+            background: transparent;
+            border: none;
+            padding: 15px;
+            color: #e6edf3;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+            outline: none;
+        }
+
+        .btn-run {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--accent-green), #78c918);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 15px;
+        }
+
+        .btn-run:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(149, 237, 25, 0.3);
+        }
+
+        .output-panel {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 150px;
+            border: 1px solid #30363d;
+        }
+
+        .output-panel h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .output-content {
+            font-family: 'Fira Code', monospace;
+            color: #e6edf3;
+            white-space: pre-wrap;
+        }
+
+        /* Visualizadores Específicos */
+        .visualizer {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .visualizer h4 {
+            color: var(--accent-cyan);
+            margin-bottom: 15px;
+        }
+
+        /* Fluxograma */
+        .flowchart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .flow-node {
+            background: var(--bg-panel);
+            border: 2px solid var(--accent-cyan);
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .flow-node.active {
+            background: rgba(102, 252, 241, 0.2);
+            box-shadow: 0 0 20px rgba(102, 252, 241, 0.3);
+        }
+
+        .flow-node.decision {
+            border-radius: 50%;
+            padding: 20px;
+        }
+
+        .flow-arrow {
+            color: var(--accent-green);
+            font-size: 1.5rem;
+        }
+
+        /* Visualizador de Variáveis */
+        .var-box {
+            display: inline-block;
+            background: var(--bg-panel);
+            border: 2px solid var(--accent-orange);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .var-name {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+        }
+
+        .var-value {
+            color: var(--accent-cyan);
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+        .var-type {
+            color: var(--accent-orange);
+            font-size: 0.75rem;
+            margin-top: 5px;
+        }
+
+        /* Visualizador de Arrays */
+        .array-container {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .array-index {
+            text-align: center;
+        }
+
+        .array-box {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-panel);
+            border: 2px solid var(--accent-cyan);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--accent-cyan);
+            transition: all 0.3s;
+        }
+
+        .array-box.highlight {
+            background: rgba(102, 252, 241, 0.3);
+            transform: scale(1.1);
+        }
+
+        .array-idx {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 5px;
+        }
+
+        /* Matriz */
+        .matrix-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        /* Controles */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn-control {
+            padding: 8px 16px;
+            background: var(--bg-panel);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-control:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-dark);
+        }
+
+        .input-control {
+            padding: 8px 12px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 6px;
+            width: 100px;
+        }
+
+        /* Quiz */
+        .quiz-option {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--accent-green);
+            background: rgba(149, 237, 25, 0.1);
+        }
+
+        .quiz-option.wrong {
+            border-color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        /* Navegação de Aulas */
+        .lesson-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-nav {
+            padding: 12px 25px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nav:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-dark);
+        }
+
+        .btn-nav.next {
+            background: var(--accent-cyan);
+            color: var(--bg-dark);
+        }
+
+        .btn-nav.next:hover {
+            background: var(--accent-green);
+        }
+
+        /* Animações */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+
+        /* Responsivo */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+            }
+            
+            .content-area {
+                flex-direction: column;
+            }
+            
+            .practice-panel {
+                width: 100%;
+                border-left: none;
+                border-top: 2px solid var(--accent-green);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <div class="content">
-            <div class="header">
-                <h1>Bem-vindo ao Dashboard de Lógica de Programação</h1>
-            </div>
-
-            <div class="topic">
-                <h2>Introdução aos Conceitos Básicos em Lógica de Programação</h2>
-                <p>Aqui você encontrará uma introdução completa aos conceitos básicos da lógica de programação, incluindo estrutura de dados, tipos de dados, operadores e controle de fluxo.</p>
-            </div>
-
-            <div class="topic">
-                <h2>Entendendo Algoritmos e Fluxogramas</h2>
-                <p>Explore a importância dos algoritmos e fluxogramas na lógica de programação. Aprenda a desenhar fluxogramas e entender a lógica por trás de cada algoritmo.</p>
-            </div>
-
-            <div class="topic">
-                <h2>Estrutura de um Software e Seu Ambiente de Desenvolvimento</h2>
-                <p>Conheça a estrutura de um software, desde sua arquitetura até o ambiente de desenvolvimento integrado (IDE) mais adequado para o desenvolvimento de código.</p>
-            </div>
-
-            <div class="topic">
-                <h2>Trabalhando com Variáveis</h2>
-                <p>Aprenda como declarar e manipular variáveis em diferentes linguagens de programação, compreendendo tipos de dados e operações básicas.</p>
-            </div>
-
-            <div class="topic">
-                <h2>Criando e Manipulando Vetores e Matrizes</h2>
-                <p>Explore como criar e manipular vetores e matrizes em várias linguagens, compreendendo operações matemáticas e lógicas associadas.</p>
+    <header class="header">
+        <h1>Lógica de Programação - Dashboard Interativa</h1>
+        <div>
+            <span style="color: var(--text-secondary); font-size: 0.9rem;">Progresso: </span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
             </div>
         </div>
+    </header>
 
-        <div class="interactive-space">
-            <h2>Espaço Interativo</h2>
-            <p>Este é um espaço onde você pode praticar conceitos aprendidos. Experimente códigos, interaja com exemplos e teste sua compreensão da lógica de programação.</p>
-            <!-- Adicione elementos interativos conforme necessário -->
+    <div class="main-container">
+        <nav class="sidebar">
+            <div class="nav-item active" onclick="loadLesson(0)">
+                <h3>1. Conceitos Básicos</h3>
+                <p>Introdução à lógica</p>
+                <span class="status"></span>
+            </div>
+            <div class="nav-item" onclick="loadLesson(1)">
+                <h3>2. Algoritmos</h3>
+                <p>Fluxogramas e pseudocódigo</p>
+                <span class="status"></span>
+            </div>
+            <div class="nav-item" onclick="loadLesson(2)">
+                <h3>3. Estrutura do Software</h3>
+                <p>IDE e ambiente dev</p>
+                <span class="status"></span>
+            </div>
+            <div class="nav-item" onclick="loadLesson(3)">
+                <h3>4. Variáveis</h3>
+                <p>Tipos e operações</p>
+                <span class="status"></span>
+            </div>
+            <div class="nav-item" onclick="loadLesson(4)">
+                <h3>5. Vetores e Matrizes</h3>
+                <p>Estruturas de dados</p>
+                <span class="status"></span>
+            </div>
+        </nav>
+
+        <div class="content-area">
+            <div class="theory-panel" id="theoryPanel">
+                <!-- Conteúdo dinâmico -->
+            </div>
+
+            <div class="practice-panel">
+                <div class="practice-header">
+                    <h2>🚀 Laboratório de Prática</h2>
+                </div>
+                <div class="practice-content" id="practicePanel">
+                    <!-- Conteúdo prático dinâmico -->
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        function goBack() {
-            window.location.href = '/';
+        // Dados das lições
+        const lessons = [
+            {
+                title: "Introdução aos Conceitos Básicos",
+                theory: `
+                    <div class="theory-card">
+                        <h2>🧠 O que é Lógica de Programação?</h2>
+                        <p>Lógica de programação é a técnica de encadear pensamentos para atingir determinado objetivo. É a organização coesa de uma série de instruções para resolver um problema.</p>
+                        
+                        <h3>Conceitos Fundamentais</h3>
+                        <ul>
+                            <li><strong>Algoritmo:</strong> Sequência finita de passos para resolver um problema</li>
+                            <li><strong>Programa:</strong> Conjunto de instruções que o computador executa</li>
+                            <li><strong>Sintaxe:</strong> Regras de escrita do código</li>
+                            <li><strong>Semântica:</strong> Significado do código escrito</li>
+                        </ul>
+
+                        <h3>Exemplo de Pensamento Lógico</h3>
+                        <p>Para fazer um café, seguimos uma sequência lógica:</p>
+                        <div class="code-example">
+<span class="number">1.</span> Ferver água
+<span class="number">2.</span> Colocar pó de café no filtro
+<span class="number">3.</span> Despejar água quente
+<span class="number">4.</span> Aguardar passar
+<span class="number">5.</span> Servir na xícara
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h2>💻 Primeiro Código</h2>
+                        <p>O clássico "Olá, Mundo!" representa o primeiro contato com uma linguagem de programação:</p>
+                        <div class="code-example">
+<span class="comment">// Exemplo em JavaScript</span>
+<span class="function">console</span>.<span class="function">log</span>(<span class="string">"Olá, Mundo!"</span>);
+
+<span class="comment"># Exemplo em Python</span>
+<span class="function">print</span>(<span class="string">"Olá, Mundo!"</span>)
+
+<span class="comment">// Exemplo em C</span>
+<span class="function">printf</span>(<span class="string">"Olá, Mundo!\n"</span>);
+                        </div>
+                    </div>
+                `,
+                practice: `
+                    <div class="code-editor">
+                        <div class="editor-header">
+                            <span class="editor-dot red"></span>
+                            <span class="editor-dot yellow"></span>
+                            <span class="editor-dot green"></span>
+                            <span class="editor-title">script.js</span>
+                        </div>
+                        <textarea class="code-input" id="codeEditor" spellcheck="false">// Escreva seu primeiro código aqui
+// Use console.log() para exibir mensagens
+
+console.log("Olá, Mundo!");</textarea>
+                    </div>
+                    
+                    <button class="btn-run" onclick="runCode()">▶ Executar Código</button>
+                    
+                    <div class="output-panel">
+                        <h4>📤 Saída:</h4>
+                        <div class="output-content" id="output">Aguardando execução...</div>
+                    </div>
+
+                    <div class="visualizer">
+                        <h4>🎯 Quiz: O que é um algoritmo?</h4>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">A) Um tipo de vírus de computador</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, true)">B) Sequência de passos para resolver um problema</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">C) Uma linguagem de programação</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">D) Um componente de hardware</button>
+                    </div>
+                `
+            },
+            {
+                title: "Entendendo Algoritmos e Fluxogramas",
+                theory: `
+                    <div class="theory-card">
+                        <h2>📊 Fluxogramas</h2>
+                        <p>Fluxogramas são representações gráficas de algoritmos usando símbolos padronizados. Cada forma tem um significado específico:</p>
+                        
+                        <ul>
+                            <li><strong>⭕ Terminal:</strong> Início e fim do algoritmo</li>
+                            <li><strong>▭ Processo:</strong> Ações e operações</li>
+                            <li><strong>◊ Decisão:</strong> Estruturas condicionais (sim/não)</li>
+                            <li><strong>→ Setas:</strong> Fluxo de execução</li>
+                            <li><strong>▱ Entrada/Saída:</strong> Leitura e escrita de dados</li>
+                        </ul>
+
+                        <h3>Estruturas de Controle</h3>
+                        <p>Os algoritmos seguem três estruturas fundamentais:</p>
+                        <ul>
+                            <li><strong>Sequencial:</strong> Execução linha por linha</li>
+                            <li><strong>Condicional:</strong> Desvios baseados em condições (if/else)</li>
+                            <li><strong>Repetição:</strong> Laços e iterações (for, while)</li>
+                        </ul>
+                    </div>
+
+                    <div class="theory-card">
+                        <h2>🔄 Exemplo: Verificar Par ou Ímpar</h2>
+                        <div class="code-example">
+<span class="comment">// Algoritmo: Verificar se número é par</span>
+<span class="keyword">INÍCIO</span>
+    <span class="function">LER</span> numero
+    <span class="keyword">SE</span> numero % 2 == 0 <span class="keyword">ENTÃO</span>
+        <span class="function">ESCREVER</span> <span class="string">"É par"</span>
+    <span class="keyword">SENÃO</span>
+        <span class="function">ESCREVER</span> <span class="string">"É ímpar"</span>
+    <span class="keyword">FIM SE</span>
+<span class="keyword">FIM</span>
+                        </div>
+                    </div>
+                `,
+                practice: `
+                    <div class="visualizer">
+                        <h4>🔄 Fluxograma Interativo: Par ou Ímpar</h4>
+                        <div class="flowchart-container" id="flowchart">
+                            <div class="flow-node" id="node1">INÍCIO</div>
+                            <span class="flow-arrow">⬇</span>
+                            <div class="flow-node" id="node2">Digite um número</div>
+                            <span class="flow-arrow">⬇</span>
+                            <div class="flow-node decision" id="node3">N % 2 == 0?</div>
+                            <div style="display: flex; gap: 50px; align-items: flex-start;">
+                                <div style="text-align: center;">
+                                    <span class="flow-arrow">⬇</span>
+                                    <div style="color: var(--accent-green); font-size: 0.8rem;">SIM</div>
+                                    <div class="flow-node" id="node4">É PAR</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <span class="flow-arrow">⬇</span>
+                                    <div style="color: var(--accent-orange); font-size: 0.8rem;">NÃO</div>
+                                    <div class="flow-node" id="node5">É ÍMPAR</div>
+                                </div>
+                            </div>
+                            <span class="flow-arrow">⬇</span>
+                            <div class="flow-node" id="node6">FIM</div>
+                        </div>
+                        
+                        <div class="controls">
+                            <input type="number" class="input-control" id="numInput" placeholder="Número">
+                            <button class="btn-control" onclick="simulateFlowchart()">Simular</button>
+                            <button class="btn-control" onclick="resetFlowchart()">Resetar</button>
+                        </div>
+                    </div>
+
+                    <div class="code-editor">
+                        <div class="editor-header">
+                            <span class="editor-dot red"></span>
+                            <span class="editor-dot yellow"></span>
+                            <span class="editor-dot green"></span>
+                            <span class="editor-title">par_ou_impar.js</span>
+                        </div>
+                        <textarea class="code-input" id="codeEditor">// Verifique se um número é par ou ímpar
+let numero = 7;
+
+if (numero % 2 === 0) {
+    console.log(numero + " é PAR");
+} else {
+    console.log(numero + " é ÍMPAR");
+}</textarea>
+                    </div>
+                    
+                    <button class="btn-run" onclick="runCode()">▶ Executar Código</button>
+                    
+                    <div class="output-panel">
+                        <h4>📤 Saída:</h4>
+                        <div class="output-content" id="output">Aguardando execução...</div>
+                    </div>
+                `
+            },
+            {
+                title: "Estrutura de um Software e Ambiente de Desenvolvimento",
+                theory: `
+                    <div class="theory-card">
+                        <h2>🛠️ Ambiente de Desenvolvimento</h2>
+                        <p>Um ambiente de desenvolvimento integrado (IDE) é um software que fornece ferramentas abrangentes para programação:</p>
+                        
+                        <h3>Componentes Essenciais</h3>
+                        <ul>
+                            <li><strong>Editor de Código:</strong> Escrita com syntax highlighting</li>
+                            <li><strong>Compilador/Interpretador:</strong> Transforma código em executável</li>
+                            <li><strong>Depurador (Debugger):</strong> Encontra e corrige erros</li>
+                            <li><strong>Gerenciador de Arquivos:</strong> Organização do projeto</li>
+                            <li><strong>Terminal/Console:</strong> Execução e testes</li>
+                        </ul>
+
+                        <h3>IDEs Populares</h3>
+                        <ul>
+                            <li><strong>VS Code:</strong> Leve, extensível, multiplataforma</li>
+                            <li><strong>PyCharm:</strong> Especializado em Python</li>
+                            <li><strong>IntelliJ:</strong> Java e Kotlin</li>
+                            <li><strong>Code::Blocks:</strong> C/C++</li>
+                        </ul>
+                    </div>
+
+                    <div class="theory-card">
+                        <h2>📁 Estrutura de Projeto</h2>
+                        <p>Organização típica de um projeto de software:</p>
+                        <div class="code-example">
+meu-projeto/
+├── 📁 src/           <span class="comment"># Código fonte</span>
+├── 📁 assets/        <span class="comment"># Imagens, fontes, etc</span>
+├── 📁 docs/          <span class="comment"># Documentação</span>
+├── 📁 tests/         <span class="comment"># Testes automatizados</span>
+├── 📄 README.md      <span class="comment"># Descrição do projeto</span>
+├── 📄 package.json   <span class="comment"># Dependências (Node)</span>
+└── 📄 .gitignore     <span class="comment"># Arquivos ignorados</span>
+                        </div>
+                    </div>
+                `,
+                practice: `
+                    <div class="visualizer">
+                        <h4>🐛 Simulador de Debug</h4>
+                        <p>Encontre e corrija o erro no código abaixo:</p>
+                        <div class="code-editor" style="margin-top: 15px;">
+                            <textarea class="code-input" id="debugCode" style="min-height: 120px;">function calcularMedia(nota1, nota2) {
+    let media = nota1 + nota2 / 2;
+    return media;
+}
+
+console.log(calcularMedia(8, 6));</textarea>
+                        </div>
+                        <div class="controls">
+                            <button class="btn-control" onclick="checkDebug()">Verificar Erro</button>
+                            <button class="btn-control" onclick="showSolution()">Ver Solução</button>
+                        </div>
+                        <div id="debugFeedback" style="margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                    </div>
+
+                    <div class="visualizer">
+                        <h4>📂 Quiz: Organização de Projeto</h4>
+                        <p>Onde devemos colocar imagens e recursos visuais?</p>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">A) Na pasta src/</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, true)">B) Na pasta assets/</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">C) Na raiz do projeto</button>
+                        <button class="quiz-option" onclick="checkAnswer(this, false)">D) Em qualquer lugar</button>
+                    </div>
+                `
+            },
+            {
+                title: "Trabalhando com Variáveis",
+                theory: `
+                    <div class="theory-card">
+                        <h2>📦 O que são Variáveis?</h2>
+                        <p>Variáveis são espaços na memória do computador usados para armazenar dados. Cada variável tem um <strong>nome</strong>, um <strong>tipo</strong> e um <strong>valor</strong>.</p>
+                        
+                        <h3>Tipos de Dados Primitivos</h3>
+                        <ul>
+                            <li><strong>Inteiro (int):</strong> Números inteiros (42, -10, 0)</li>
+                            <li><strong>Real/Float:</strong> Números decimais (3.14, -0.5)</li>
+                            <li><strong>String:</strong> Texto ("Olá", 'Mundo')</li>
+                            <li><strong>Booleano:</strong> Verdadeiro ou falso (true/false)</li>
+                            <li><strong>Char:</strong> Caractere único ('A', '7')</li>
+                        </ul>
+
+                        <h3>Operações com Variáveis</h3>
+                        <div class="code-example">
+<span class="comment">// Declaração e atribuição</span>
+<span class="keyword">let</span> nome = <span class="string">"João"</span>;        <span class="comment">// String</span>
+<span class="keyword">let</span> idade = 25;             <span class="comment">// Inteiro</span>
+<span class="keyword">let</span> altura = 1.75;          <span class="comment">// Float</span>
+<span class="keyword">let</span> estudante = <span class="keyword">true</span>;     <span class="comment">// Booleano</span>
+
+<span class="comment">// Operações aritméticas</span>
+<span class="keyword">let</span> soma = 10 + 5;          <span class="comment">// 15</span>
+<span class="keyword">let</span> produto = idade * 2;    <span class="comment">// 50</span>
+<span class="keyword">let</span> media = (8 + 9) / 2;    <span class="comment">// 8.5</span>
+
+<span class="comment">// Concatenação de strings</span>
+<span class="keyword">let</span> mensagem = <span class="string">"Olá, "</span> + nome;  <span class="comment">// "Olá, João"</span>
+                        </div>
+                    </div>
+
+                    <div class="theory-card">
+                        <h2>⚠️ Regras para Nomes de Variáveis</h2>
+                        <ul>
+                            <li>Deve começar com letra ou underscore (_)</li>
+                            <li>Não pode começar com número</li>
+                            <li>Não pode conter espaços</li>
+                            <li>Case-sensitive (idade ≠ Idade)</li>
+                            <li>Evite palavras reservadas (if, while, function)</li>
+                        </ul>
+                    </div>
+                `,
+                practice: `
+                    <div class="visualizer">
+                        <h4>🔧 Laboratório de Variáveis</h4>
+                        <p>Crie e manipule variáveis em tempo real:</p>
+                        
+                        <div class="controls" style="margin-top: 15px;">
+                            <input type="text" class="input-control" id="varName" placeholder="Nome" style="width: 120px;">
+                            <select class="input-control" id="varType" style="width: 100px;">
+                                <option value="string">String</option>
+                                <option value="number">Número</option>
+                                <option value="boolean">Booleano</option>
+                            </select>
+                            <input type="text" class="input-control" id="varValue" placeholder="Valor">
+                            <button class="btn-control" onclick="createVariable()">Criar</button>
+                        </div>
+
+                        <div id="varContainer" style="margin-top: 20px; min-height: 100px;">
+                            <p style="color: var(--text-secondary); text-align: center;">Nenhuma variável criada ainda</p>
+                        </div>
+                    </div>
+
+                    <div class="code-editor">
+                        <div class="editor-header">
+                            <span class="editor-dot red"></span>
+                            <span class="editor-dot yellow"></span>
+                            <span class="editor-dot green"></span>
+                            <span class="editor-title">variaveis.js</span>
+                        </div>
+                        <textarea class="code-input" id="codeEditor">// Pratique operações com variáveis
+let preco = 29.99;
+let quantidade = 3;
+let total = preco * quantidade;
+
+console.log("Preço unitário: R$" + preco);
+console.log("Quantidade: " + quantidade);
+console.log("Total: R$" + total.toFixed(2));
+
+// Troque os valores e veja o resultado!</textarea>
+                    </div>
+                    
+                    <button class="btn-run" onclick="runCode()">▶ Executar Código</button>
+                    
+                    <div class="output-panel">
+                        <h4>📤 Saída:</h4>
+                        <div class="output-content" id="output">Aguardando execução...</div>
+                    </div>
+                `
+            },
+            {
+                title: "Criando e Manipulando Vetores e Matrizes",
+                theory: `
+                    <div class="theory-card">
+                        <h2>📚 Vetores (Arrays)</h2>
+                        <p>Vetores são estruturas que armazenam múltiplos valores em uma única variável. Cada valor é acessado por um <strong>índice</strong> (posição), começando do zero.</p>
+                        
+                        <div class="code-example">
+<span class="comment">// Declaração de vetores</span>
+<span class="keyword">let</span> frutas = [<span class="string">"Maçã"</span>, <span class="string">"Banana"</span>, <span class="string">"Laranja"</span>];
+<span class="keyword">let</span> numeros = [10, 20, 30, 40, 50];
+
+<span class="comment">// Acesso por índice</span>
+<span class="function">console</span>.<span class="function">log</span>(frutas[0]);    <span class="comment">// "Maçã"</span>
+<span class="function">console</span>.<span class="function">log</span>(frutas[2]);    <span class="comment">// "Laranja"</span>
+
+<span class="comment">// Modificar valor</span>
+frutas[1] = <span class="string">"Manga"</span>;       <span class="comment">// ["Maçã", "Manga", "Laranja"]</span>
+
+<span class="comment">// Tamanho do vetor</span>
+<span class="function">console</span>.<span class="function">log</span>(frutas.length);  <span class="comment">// 3</span>
+                        </div>
+
+                        <h3>Operações Comuns</h3>
+                        <ul>
+                            <li><strong>push():</strong> Adiciona no final</li>
+                            <li><strong>pop():</strong> Remove do final</li>
+                            <li><strong>unshift():</strong> Adiciona no início</li>
+                            <li><strong>shift():</strong> Remove do início</li>
+                            <li><strong>indexOf():</strong> Busca posição de um elemento</li>
+                        </ul>
+                    </div>
+
+                    <div class="theory-card">
+                        <h2>🧮 Matrizes (Arrays Multidimensionais)</h2>
+                        <p>Matrizes são vetores de vetores, úteis para representar tabelas, grades ou dados bidimensionais:</p>
+                        
+                        <div class="code-example">
+<span class="comment">// Matriz 3x3 (tabuleiro)</span>
+<span class="keyword">let</span> tabuleiro = [
+    [<span class="string">"X"</span>, <span class="string">"O"</span>, <span class="string">"X"</span>],
+    [<span class="string">"O"</span>, <span class="string">"X"</span>, <span class="string">"O"</span>],
+    [<span class="string">" "</span>, <span class="string">" "</span>, <span class="string">"X"</span>]
+];
+
+<span class="comment">// Acesso: matriz[linha][coluna]</span>
+<span class="function">console</span>.<span class="function">log</span>(tabuleiro[0][1]);  <span class="comment">// "O"</span>
+<span class="function">console</span>.<span class="function">log</span>(tabuleiro[2][2]);  <span class="comment">// "X"</span>
+
+<span class="comment">// Percorrer matriz</span>
+<span class="keyword">for</span> (<span class="keyword">let</span> i = 0; i < tabuleiro.length; i++) {
+    <span class="keyword">for</span> (<span class="keyword">let</span> j = 0; j < tabuleiro[i].length; j++) {
+        <span class="function">console</span>.<span class="function">log</span>(<span class="string">`Posição [${i}][${j}]: ${tabuleiro[i][j]}`</span>);
+    }
+}
+                        </div>
+                    </div>
+                `,
+                practice: `
+                    <div class="visualizer">
+                        <h4>📊 Visualizador de Array</h4>
+                        <div class="array-container" id="arrayViz">
+                            <div class="array-index">
+                                <div class="array-box">10</div>
+                                <div class="array-idx">0</div>
+                            </div>
+                            <div class="array-index">
+                                <div class="array-box">25</div>
+                                <div class="array-idx">1</div>
+                            </div>
+                            <div class="array-index">
+                                <div class="array-box">30</div>
+                                <div class="array-idx">2</div>
+                            </div>
+                            <div class="array-index">
+                                <div class="array-box">45</div>
+                                <div class="array-idx">3</div>
+                            </div>
+                            <div class="array-index">
+                                <div class="array-box">50</div>
+                                <div class="array-idx">4</div>
+                            </div>
+                        </div>
+                        
+                        <div class="controls">
+                            <input type="text" class="input-control" id="arrayValue" placeholder="Valor">
+                            <button class="btn-control" onclick="arrayPush()">Adicionar (push)</button>
+                            <button class="btn-control" onclick="arrayPop()">Remover (pop)</button>
+                            <button class="btn-control" onclick="arrayClear()">Limpar</button>
+                        </div>
+                    </div>
+
+                    <div class="visualizer">
+                        <h4>🎮 Matriz 3x3 - Jogo da Velha</h4>
+                        <div id="matrixViz" style="margin: 20px 0;">
+                            <div class="matrix-row">
+                                <div class="array-box" onclick="setMatrix(0,0)" style="cursor: pointer;"> </div>
+                                <div class="array-box" onclick="setMatrix(0,1)" style="cursor: pointer;"> </div>
+                                <div class="array-box" onclick="setMatrix(0,2)" style="cursor: pointer;"> </div>
+                            </div>
+                            <div class="matrix-row">
+                                <div class="array-box" onclick="setMatrix(1,0)" style="cursor: pointer;"> </div>
+                                <div class="array-box" onclick="setMatrix(1,1)" style="cursor: pointer;"> </div>
+                                <div class="array-box" onclick="setMatrix(1,2)" style="cursor: pointer;"> </div>
+                            </div>
+                            <div class="matrix-row">
+                                <div class="array-box" onclick="setMatrix(2,0)" style="cursor: pointer;"> </div>
+                                <div class="array-box" onclick="setMatrix(2,1)" style="cursor: pointer;"> </div>
+                                <div class="array-box" onclick="setMatrix(2,2)" style="cursor: pointer;"> </div>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <button class="btn-control" onclick="clearMatrix()">Limpar Matriz</button>
+                            <span style="color: var(--text-secondary);">Jogador atual: <span id="currentPlayer" style="color: var(--accent-cyan); font-weight: bold;">X</span></span>
+                        </div>
+                    </div>
+
+                    <div class="code-editor">
+                        <div class="editor-header">
+                            <span class="editor-dot red"></span>
+                            <span class="editor-dot yellow"></span>
+                            <span class="editor-dot green"></span>
+                            <span class="editor-title">arrays.js</span>
+                        </div>
+                        <textarea class="code-input" id="codeEditor">// Pratique com arrays e matrizes
+let notas = [8.5, 7.0, 9.5, 6.0, 8.0];
+
+// Calcule a média
+let soma = 0;
+for (let i = 0; i < notas.length; i++) {
+    soma += notas[i];
+}
+let media = soma / notas.length;
+
+console.log("Notas: " + notas);
+console.log("Média: " + media.toFixed(2));
+
+// Adicione uma nova nota
+notas.push(7.5);
+console.log("Nova nota adicionada!");</textarea>
+                    </div>
+                    
+                    <button class="btn-run" onclick="runCode()">▶ Executar Código</button>
+                    
+                    <div class="output-panel">
+                        <h4>📤 Saída:</h4>
+                        <div class="output-content" id="output">Aguardando execução...</div>
+                    </div>
+                `
+            }
+        ];
+
+        let currentLesson = 0;
+        let currentPlayer = 'X';
+        let matrix = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+        let variables = [];
+
+        // Inicialização
+        function loadLesson(index) {
+            currentLesson = index;
+            
+            // Atualizar navegação
+            document.querySelectorAll('.nav-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+            
+            // Carregar conteúdo
+            document.getElementById('theoryPanel').innerHTML = `
+                <div class="lesson-nav" style="margin-bottom: 20px;">
+                    <button class="btn-nav" onclick="prevLesson()" ${index === 0 ? 'style="visibility: hidden;"' : ''}>
+                        ← Anterior
+                    </button>
+                    <span style="color: var(--text-secondary);">Aula ${index + 1} de ${lessons.length}</span>
+                    <button class="btn-nav next" onclick="nextLesson()" ${index === lessons.length - 1 ? 'style="visibility: hidden;"' : ''}>
+                        Próximo →
+                    </button>
+                </div>
+                ${lessons[index].theory}
+                <div class="lesson-nav">
+                    <button class="btn-nav" onclick="prevLesson()" ${index === 0 ? 'style="visibility: hidden;"' : ''}>
+                        ← Anterior
+                    </button>
+                    <button class="btn-nav next" onclick="markComplete()">
+                        ✓ Marcar como Concluída
+                    </button>
+                    <button class="btn-nav next" onclick="nextLesson()" ${index === lessons.length - 1 ? 'style="visibility: hidden;"' : ''}>
+                        Próximo →
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('practicePanel').innerHTML = lessons[index].practice;
+            
+            // Atualizar barra de progresso
+            updateProgress();
         }
+
+        function nextLesson() {
+            if (currentLesson < lessons.length - 1) {
+                loadLesson(currentLesson + 1);
+            }
+        }
+
+        function prevLesson() {
+            if (currentLesson > 0) {
+                loadLesson(currentLesson - 1);
+            }
+        }
+
+        function markComplete() {
+            document.querySelectorAll('.nav-item')[currentLesson].classList.add('completed');
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const completed = document.querySelectorAll('.nav-item.completed').length;
+            const percentage = (completed / lessons.length) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        // Executar código
+        function runCode() {
+            const code = document.getElementById('codeEditor').value;
+            const output = document.getElementById('output');
+            
+            let consoleOutput = [];
+            const mockConsole = {
+                log: (...args) => {
+                    consoleOutput.push(args.map(a => String(a)).join(' '));
+                }
+            };
+            
+            try {
+                // Criar função segura para executar código
+                const func = new Function('console', code);
+                func(mockConsole);
+                output.textContent = consoleOutput.join('\n') || 'Código executado (sem saída)';
+                output.style.color = '#e6edf3';
+            } catch (err) {
+                output.textContent = '❌ Erro: ' + err.message;
+                output.style.color = '#ff4444';
+            }
+        }
+
+        // Quiz
+        function checkAnswer(btn, isCorrect) {
+            document.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.disabled = true;
+            });
+            
+            if (isCorrect) {
+                btn.classList.add('correct');
+                btn.innerHTML += ' ✓';
+            } else {
+                btn.classList.add('wrong');
+                btn.innerHTML += ' ✗';
+            }
+        }
+
+        // Fluxograma
+        function simulateFlowchart() {
+            const num = parseInt(document.getElementById('numInput').value);
+            if (isNaN(num)) {
+                alert('Digite um número válido');
+                return;
+            }
+            
+            // Reset
+            document.querySelectorAll('.flow-node').forEach(n => n.classList.remove('active'));
+            
+            // Animação sequencial
+            const nodes = ['node1', 'node2', 'node3'];
+            let i = 0;
+            
+            function activateNext() {
+                if (i < nodes.length) {
+                    document.getElementById(nodes[i]).classList.add('active');
+                    i++;
+                    setTimeout(activateNext, 800);
+                } else {
+                    // Decisão
+                    if (num % 2 === 0) {
+                        document.getElementById('node4').classList.add('active');
+                    } else {
+                        document.getElementById('node5').classList.add('active');
+                    }
+                    setTimeout(() => {
+                        document.getElementById('node6').classList.add('active');
+                    }, 800);
+                }
+            }
+            
+            activateNext();
+        }
+
+        function resetFlowchart() {
+            document.querySelectorAll('.flow-node').forEach(n => n.classList.remove('active'));
+            document.getElementById('numInput').value = '';
+        }
+
+        // Debug
+        function checkDebug() {
+            const feedback = document.getElementById('debugFeedback');
+            feedback.innerHTML = '<p style="color: #ff4444;">❌ Ainda há um erro! Dica: A ordem das operações matemáticas segue precedência (divisão antes da adição).</p>';
+        }
+
+        function showSolution() {
+            const feedback = document.getElementById('debugFeedback');
+            feedback.innerHTML = `<div class="code-example" style="margin: 0;">
+<p style="color: var(--accent-green);">✓ Correção:</p>
+<span class="keyword">let</span> media = (nota1 + nota2) / 2;
+<p style="color: var(--text-secondary); margin-top: 10px;">Os parênteses garantem que a soma seja feita antes da divisão!</p>
+</div>`;
+        }
+
+        // Variáveis interativas
+        function createVariable() {
+            const name = document.getElementById('varName').value;
+            const type = document.getElementById('varType').value;
+            let value = document.getElementById('varValue').value;
+            
+            if (!name || !value) {
+                alert('Preencha nome e valor');
+                return;
+            }
+            
+            // Converter valor conforme tipo
+            if (type === 'number') value = parseFloat(value) || 0;
+            if (type === 'boolean') value = value === 'true';
+            
+            variables.push({ name, type, value });
+            renderVariables();
+            
+            // Limpar inputs
+            document.getElementById('varName').value = '';
+            document.getElementById('varValue').value = '';
+        }
+
+        function renderVariables() {
+            const container = document.getElementById('varContainer');
+            if (variables.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center;">Nenhuma variável criada ainda</p>';
+                return;
+            }
+            
+            container.innerHTML = variables.map(v => `
+                <div class="var-box">
+                    <div class="var-name">${v.name}</div>
+                    <div class="var-value">${v.value}</div>
+                    <div class="var-type">${v.type}</div>
+                </div>
+            `).join('');
+        }
+
+        // Array visual
+        let arrayData = [10, 25, 30, 45, 50];
+
+        function arrayPush() {
+            const val = document.getElementById('arrayValue').value;
+            if (!val) return;
+            arrayData.push(isNaN(val) ? val : Number(val));
+            renderArray();
+            document.getElementById('arrayValue').value = '';
+        }
+
+        function arrayPop() {
+            arrayData.pop();
+            renderArray();
+        }
+
+        function arrayClear() {
+            arrayData = [];
+            renderArray();
+        }
+
+        function renderArray() {
+            const container = document.getElementById('arrayViz');
+            if (arrayData.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); width: 100%; text-align: center;">Array vazio</p>';
+                return;
+            }
+            
+            container.innerHTML = arrayData.map((val, idx) => `
+                <div class="array-index">
+                    <div class="array-box">${val}</div>
+                    <div class="array-idx">${idx}</div>
+                </div>
+            `).join('');
+        }
+
+        // Matriz
+        function setMatrix(row, col) {
+            if (matrix[row][col] !== ' ') return;
+            
+            matrix[row][col] = currentPlayer;
+            renderMatrix();
+            
+            // Alternar jogador
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('currentPlayer').textContent = currentPlayer;
+        }
+
+        function renderMatrix() {
+            const rows = document.querySelectorAll('.matrix-row');
+            for (let i = 0; i < 3; i++) {
+                const boxes = rows[i].querySelectorAll('.array-box');
+                for (let j = 0; j < 3; j++) {
+                    boxes[j].textContent = matrix[i][j];
+                    boxes[j].style.color = matrix[i][j] === 'X' ? '#66fcf1' : '#ff6b35';
+                }
+            }
+        }
+
+        function clearMatrix() {
+            matrix = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+            currentPlayer = 'X';
+            document.getElementById('currentPlayer').textContent = 'X';
+            renderMatrix();
+        }
+
+        // Inicializar primeira lição
+        loadLesson(0);
     </script>
-    <button class="back-button" onclick="goBack()">Voltar</button>
 </body>
 </html>
