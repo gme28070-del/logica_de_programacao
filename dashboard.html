@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Lógica de Programação</title>
+    <style>
+        /* Reset e Box-Sizing */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Courier New', Courier, monospace; 
+        }
+
+        /* Estilização do Body */
+        body { 
+            background-color: #0b0c10; 
+            color: #66fcf1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            overflow: hidden; 
+        }
+
+        /* Estrutura Geral */
+       .dashboard-container {
+            display: flex;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        /* Conteúdo Principal */
+       .content {
+            flex: 3;
+            padding: 20px;
+            background-color: #1f2833;
+            border-right: 2px solid #95ed19;
+        }
+
+        /* Espaço Interativo */
+       .interactive-space {
+            flex: 1;
+            padding: 20px;
+            background-color: #2c3444;
+        }
+
+        /* Cabeçalho */
+       .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Tópicos de Lógica de Programação */
+       .topic {
+            margin-bottom: 20px;
+        }
+
+       .topic h2 {
+            color: #95ed19;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+       .topic p {
+            line-height: 1.6;
+        }
+
+        /* Botão Voltar */
+       .back-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #95ed19;
+            color: #0b0c10;
+            text-align: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+       .back-button:hover {
+            background-color: #78c918;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="content">
+            <div class="header">
+                <h1>Bem-vindo ao Dashboard de Lógica de Programação</h1>
+            </div>
+
+            <div class="topic">
+                <h2>Introdução aos Conceitos Básicos em Lógica de Programação</h2>
+                <p>Aqui você encontrará uma introdução completa aos conceitos básicos da lógica de programação, incluindo estrutura de dados, tipos de dados, operadores e controle de fluxo.</p>
+            </div>
+
+            <div class="topic">
+                <h2>Entendendo Algoritmos e Fluxogramas</h2>
+                <p>Explore a importância dos algoritmos e fluxogramas na lógica de programação. Aprenda a desenhar fluxogramas e entender a lógica por trás de cada algoritmo.</p>
+            </div>
+
+            <div class="topic">
+                <h2>Estrutura de um Software e Seu Ambiente de Desenvolvimento</h2>
+                <p>Conheça a estrutura de um software, desde sua arquitetura até o ambiente de desenvolvimento integrado (IDE) mais adequado para o desenvolvimento de código.</p>
+            </div>
+
+            <div class="topic">
+                <h2>Trabalhando com Variáveis</h2>
+                <p>Aprenda como declarar e manipular variáveis em diferentes linguagens de programação, compreendendo tipos de dados e operações básicas.</p>
+            </div>
+
+            <div class="topic">
+                <h2>Criando e Manipulando Vetores e Matrizes</h2>
+                <p>Explore como criar e manipular vetores e matrizes em várias linguagens, compreendendo operações matemáticas e lógicas associadas.</p>
+            </div>
+        </div>
+
+        <div class="interactive-space">
+            <h2>Espaço Interativo</h2>
+            <p>Este é um espaço onde você pode praticar conceitos aprendidos. Experimente códigos, interaja com exemplos e teste sua compreensão da lógica de programação.</p>
+            <!-- Adicione elementos interativos conforme necessário -->
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.location.href = '/';
+        }
+    </script>
+    <button class="back-button" onclick="goBack()">Voltar</button>
+</body>
+</html>
